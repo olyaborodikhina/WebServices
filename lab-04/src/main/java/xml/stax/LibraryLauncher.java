@@ -73,17 +73,35 @@ public class LibraryLauncher {
 
             } else if (event.isStartElement()) {
                 final StartElement e = (StartElement) event;
-                if (e.getName().equals("book")) {
+                if ("book".equals(e.getName().getLocalPart())) {
+//                    Iterator iterator = e.getAttributes();
+//                    while (iterator.hasNext()) {
+//                        Attribute a = (Attribute) iterator.next();
+//                        if ("author name".equals(a.getName().getLocalPart())) {
+//                            Author author = new Author();
+//                            author.setName(a.getValue());
+//                            library.getAuthors().add(author);//
+//                        }
+//                    }
+                }
+                if ("author".equals(e.getName().getLocalPart())) {
+                    Author author = new Author();
+                    Iterator iter = e.getAttributes();
+                    while (iter.hasNext()){
+                        Attribute a = (Attribute) iter.next();
+                        author.setName(a.getValue());
+                        library.getAuthors().add(author);
+                    }
+                }
+                if("title".equals(e.getName().getLocalPart())){
+                    Book book = new Book();
                     Iterator iterator = e.getAttributes();
                     while (iterator.hasNext()) {
                         Attribute a = (Attribute) iterator.next();
-                        if (a.equals("author")) {
-                            Author author = new Author();
-                            author.setName(a.toString());
-                            library.getAuthors().add(author);//
-                        }
+                        book.setTitle(a.getValue());
                     }
                 }
+
             }else if (event.isEndElement()){
                //здесь нужно добавить эту книгу в библиотеку
             }
