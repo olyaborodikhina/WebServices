@@ -10,7 +10,11 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+
+import static java.util.Collections.*;
 
 /**
  * @author Anton German &lt;AGerman@luxoft.com&gt;
@@ -91,9 +95,13 @@ public class LibraryLauncher {
     private static void writeLibrary(final Library library, final OutputStream os) throws XMLStreamException {
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
         XMLEventWriter writer = factory.createXMLEventWriter(os);
+
         XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+        Attribute a = eventFactory.createAttribute(QName.valueOf("name"),
+                "Kennet Beck"
+        );
         writer.add(eventFactory.createStartDocument());
-        writer.add(eventFactory.createStartElement(QName.valueOf("example"),null,null));
+        writer.add(eventFactory.createStartElement(QName.valueOf("author"), Collections.singleton(a).iterator(),null));
         writer.add(eventFactory.createEndDocument());
         writer.close();
     }
