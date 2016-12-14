@@ -6,9 +6,7 @@ import xml.domain.Library;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.*;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.events.*;
 import java.io.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -60,6 +58,8 @@ public class LibraryLauncher {
 
     private static Library buildLibrary(final InputStream is) throws XMLStreamException, FileNotFoundException {
         Library library = null;
+        String title = null;
+        Book book = new Book();
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLEventReader reader = factory.createXMLEventReader(is);
         while (reader.hasNext()) {
@@ -73,37 +73,34 @@ public class LibraryLauncher {
 
             } else if (event.isStartElement()) {
                 final StartElement e = (StartElement) event;
-                if ("book".equals(e.getName().getLocalPart())) {
-//                    Iterator iterator = e.getAttributes();
-//                    while (iterator.hasNext()) {
-//                        Attribute a = (Attribute) iterator.next();
-//                        if ("author name".equals(a.getName().getLocalPart())) {
-//                            Author author = new Author();
-//                            author.setName(a.getValue());
-//                            library.getAuthors().add(author);//
-//                        }
-//                    }
-                }
+
                 if ("author".equals(e.getName().getLocalPart())) {
                     Author author = new Author();
-                    Iterator iter = e.getAttributes();
-                    while (iter.hasNext()){
-                        Attribute a = (Attribute) iter.next();
-                        author.setName(a.getValue());
-                        library.getAuthors().add(author);
-                    }
-                }
-                if("title".equals(e.getName().getLocalPart())){
-                    Book book = new Book();
-                    Iterator iterator = e.getAttributes();
-                    while (iterator.hasNext()) {
-                        Attribute a = (Attribute) iterator.next();
-                        book.setTitle(a.getValue());
-                    }
+                    Attribute a =  e.getAttributeByName(QName.valueOf("name"));
+                    author.setName(a.getValue());
+                    library.getAuthors().add(author);
+                    book.getAuthors().add(author);
+                }else if("title".equals(e.getName().getLocalPart())){
+                    title = null;
+                } else if("book".equals(e.getName().getLocalPart())){
+                    book = new Book();
                 }
 
             }else if (event.isEndElement()){
+                final EndElement end = (EndElement) event;
                //здесь нужно добавить эту книгу в библиотеку
+               if("title".equals(end.getName().getLocalPart())){
+                    book.setTitle(title);
+                }
+
+                if("book".equals(end.getName().getLocalPart())){
+                    library.getBooks().add(book);
+                }
+
+
+            }else if(event.isCharacters()) {
+                Characters ch = (Characters)event;
+                title = ch.getData();
             }
         }
 
