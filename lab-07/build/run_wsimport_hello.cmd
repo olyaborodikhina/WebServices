@@ -15,6 +15,6 @@ if exist %OUTPUT_LOCATION% goto RUN
 mkdir %OUTPUT_LOCATION%
 
 :RUN
-%JAVA_HOME%\bin\wsimport.exe -keep -d %OUTPUT_LOCATION% %WSDL_LOCATION%
+"%JAVA_HOME%\bin\wsimport.exe" -keep -d %OUTPUT_LOCATION% %WSDL_LOCATION%
 
 :EDN
