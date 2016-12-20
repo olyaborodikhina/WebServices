@@ -37,8 +37,14 @@ public class IpAddressValidator implements SOAPHandler<SOAPMessageContext> {
                     header = envelope.getHeader();
                 }
 
-                SOAPHeaderElement headerElement = header.addHeaderElement(new QName("http://hello.ws/", "ip"));
-                System.out.println(headerElement.getTextContent());
+              // SOAPHeaderElement headerElement = header.addHeaderElement(new QName("http://hello.ws/", "ip"));
+
+                java.util.Iterator iterator = header.extractAllHeaderElements();
+                while (iterator.hasNext()){
+                  SOAPHeaderElement headerElement = (SOAPHeaderElement) iterator.next();
+                    System.out.println(headerElement.getTextContent());
+                }
+
             }
             catch (SOAPException e) {
                 e.printStackTrace();

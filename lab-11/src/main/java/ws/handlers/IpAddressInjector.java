@@ -7,6 +7,7 @@ import javax.xml.soap.*;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Set;
@@ -36,13 +37,18 @@ public class IpAddressInjector implements SOAPHandler<SOAPMessageContext> {
                 }
                 SOAPHeaderElement headerElement = header.addHeaderElement(new QName("http://hello.ws/", "ip"));
                 headerElement .addTextNode(InetAddress.getLocalHost().getHostAddress());
+                headerElement.addTextNode("hghghghhghg");
                 headerElement.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
                 message.saveChanges();
+                message.writeTo(System.out);
+                System.out.println();
 
 
             } catch (SOAPException e) {
                 e.printStackTrace();
             } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
